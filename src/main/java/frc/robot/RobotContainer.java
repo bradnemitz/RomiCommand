@@ -33,9 +33,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Wheel rightWheel = new Wheel("right");
+  /*private final Wheel rightWheel = new Wheel("right");
   private final Wheel leftWheel = new Wheel("left");
-
+*/
   private final Drivetrain m_drivetrain = new Drivetrain();
   
   private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
@@ -82,10 +82,10 @@ public class RobotContainer {
     JoystickButton button4 = new JoystickButton(m_controller, 4);
 
     m_drivetrain.setDefaultCommand(getArcadeDriveCommand());
-    buttonB.whenPressed(new DriveTime(0.5, 5, m_drivetrain));
-    buttonY.whileHeld(new Turn(0.5, m_drivetrain));
+    buttonB.whenPressed(getTankDriveCommand());
+    buttonY.whenPressed(getArcadeDriveCommand());
 
-    button4.whenHeld(new TriangleDrive(leftWheel, rightWheel, 0.25));
+    //button4.whenHeld(new TriangleDrive(leftWheel, rightWheel, 0.25));
 
 
 
@@ -107,10 +107,10 @@ public class RobotContainer {
    */
   public Command getArcadeDriveCommand() {
     return new ArcadeDrive(
-        m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(2));
+        m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(3));
   }
   public Command getTankDriveCommand() {
     return new TankDrive(
-        m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(5));
+        m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(2));
   }
 }

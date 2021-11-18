@@ -13,9 +13,9 @@ public class Wheel extends SubsystemBase {
   /** Creates a new Wheel. */
   public Wheel(String side) {
     int channel = 0;  
-    if(side == "left"){
+    if(side.equals("left")){
         channel = 0;
-    } else if (side == "right"){
+    } else if (side.equals("right")){
         channel = 1;
     }
     
