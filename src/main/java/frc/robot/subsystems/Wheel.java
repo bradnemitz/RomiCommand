@@ -8,11 +8,12 @@ public class Wheel extends SubsystemBase {
   // The Romi has the left and right motors set to
   // PWM channels 0 and 1 respectively
   private final Spark m_Motor;
-  private final SpeedController m_WheelDrive;
+  int channel;
+  //private final SpeedController m_WheelDrive;
 
   /** Creates a new Wheel. */
   public Wheel(String side) {
-    int channel = 0;  
+    channel = 0;  
     if(side.equals("left")){
         channel = 0;
     } else if (side.equals("right")){
@@ -20,11 +21,16 @@ public class Wheel extends SubsystemBase {
     }
     
     m_Motor = new Spark(channel);
-    m_WheelDrive = m_Motor;
+   //m_WheelDrive = m_Motor;
+    
   }
 
   public void moveWheel(Double speed){
-      m_WheelDrive.set(speed);
+    if(channel == 0){
+      m_Motor.set(-speed);
+    } else {
+      m_Motor.set(speed);
+    }
   }
 
   @Override

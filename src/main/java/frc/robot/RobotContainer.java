@@ -11,6 +11,7 @@ import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
 import frc.robot.commands.DriveTime;
+import frc.robot.commands.MoveWheel;
 import frc.robot.commands.Turn;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TriangleDrive;
@@ -21,7 +22,9 @@ import frc.robot.subsystems.OnBoardIO.ChannelMode;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -33,10 +36,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  /*private final Wheel rightWheel = new Wheel("right");
+  private final Wheel rightWheel = new Wheel("right");
   private final Wheel leftWheel = new Wheel("left");
-*/
-  private final Drivetrain m_drivetrain = new Drivetrain();
+
+  //private final Drivetrain m_drivetrain = new Drivetrain();
   
   private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
@@ -77,15 +80,34 @@ public class RobotContainer {
     // Start in arcade, A button goes to Tank, B button goes to arcade
     // Draw the state machine and write the code
 
-    JoystickButton buttonB = new JoystickButton(m_controller, 2);
+    JoystickButton button2 = new JoystickButton(m_controller, 2);
     JoystickButton buttonY = new JoystickButton(m_controller, 1);
     JoystickButton button4 = new JoystickButton(m_controller, 4);
 
-    m_drivetrain.setDefaultCommand(getArcadeDriveCommand());
-    buttonB.whenPressed(getTankDriveCommand());
-    buttonY.whenPressed(getArcadeDriveCommand());
+    //m_drivetrain.setDefaultCommand(getArcadeDriveCommand());
+    //buttonB.whenPressed(getTankDriveCommand());
+    //buttonY.whenPressed(getArcadeDriveCommand());
 
-    //button4.whenHeld(new TriangleDrive(leftWheel, rightWheel, 0.25));
+    button2.whenPressed(new TriangleDrive(leftWheel, rightWheel));
+    //button4.whenPressed(new MoveWheel(leftWheel, 0.5, 5));
+
+    button4.whenPressed(new SequentialCommandGroup(
+      new ParallelCommandGroup(
+          new MoveWheel(rightWheel, 0.25, 2),
+          new MoveWheel(leftWheel, 0.25, 2)
+      ), 
+      new MoveWheel(rightWheel, 0.25, 2),
+      new ParallelCommandGroup(
+          new MoveWheel(rightWheel, 0.25, 2),
+          new MoveWheel(leftWheel, 0.25, 2)
+      ), 
+      new MoveWheel(rightWheel, 0.25, 2),
+      new ParallelCommandGroup(
+          new MoveWheel(rightWheel, 0.25, 2),
+          new MoveWheel(leftWheel, 0.25, 2)
+      ), 
+      new MoveWheel(rightWheel, 0.25, 2)
+  ));
 
 
 
@@ -105,6 +127,7 @@ public class RobotContainer {
    *
    * @return the command to run in teleop
    */
+  /*
   public Command getArcadeDriveCommand() {
     return new ArcadeDrive(
         m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(3));
@@ -112,5 +135,5 @@ public class RobotContainer {
   public Command getTankDriveCommand() {
     return new TankDrive(
         m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(2));
-  }
+  } */
 }
